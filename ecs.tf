@@ -4,18 +4,19 @@ resource "aws_ecs_cluster" "facebook_cluster" {
 }
 
 # IAM Role for ECS
-resource "aws_iam_role" "ecs_execution_role" {
-  name = "ecsExecutionRole"
-
-  assume_role_policy = jsonencode({
+resource "aws_iam_policy" "cloudwatch_logs" {
+  name = "ecs-cloudwatch-logs"
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
+        Effect   = "Allow"
+        Action   = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = "${aws_cloudwatch_log_group.facebook_logs.arn}:*"
       }
     ]
   })
@@ -82,4 +83,8 @@ resource "aws_ecs_service" "facebook_service" {
   }
 
   desired_count = 1
+}
+resource "aws_cloudwatch_log_group" "facebook_logs" {
+  name              = "/ecs/facebook-service"
+  retention_in_days = 30  # Optional: Adjust as needed
 }
