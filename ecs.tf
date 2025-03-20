@@ -10,8 +10,8 @@ resource "aws_iam_policy" "cloudwatch_logs" {
     Version = "2012-10-17"
     Statement = [
       {
-        Effect   = "Allow"
-        Action   = [
+        Effect = "Allow"
+        Action = [
           "logs:CreateLogGroup",
           "logs:CreateLogStream",
           "logs:PutLogEvents"
@@ -86,5 +86,5 @@ resource "aws_ecs_service" "facebook_service" {
 }
 resource "aws_cloudwatch_log_group" "facebook_logs" {
   name              = "/ecs/facebook-service"
-  retention_in_days = 30  # Optional: Adjust as needed
+  retention_in_days = 30 # Optional: Adjust as needed
 }
