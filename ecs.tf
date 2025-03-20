@@ -3,7 +3,25 @@ resource "aws_ecs_cluster" "facebook_cluster" {
   name = "facebook-cluster"
 }
 
-# IAM Role for ECS
+# IAM Role for ECS Execution
+resource "aws_iam_role" "ecs_execution_role" {
+  name = "ecsExecutionRole"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+}
+
+# CloudWatch Logs Policy for ECS Execution Role
 resource "aws_iam_policy" "cloudwatch_logs" {
   name = "ecs-cloudwatch-logs"
   policy = jsonencode({
@@ -16,18 +34,19 @@ resource "aws_iam_policy" "cloudwatch_logs" {
           "logs:CreateLogStream",
           "logs:PutLogEvents"
         ]
-        Resource = "${aws_cloudwatch_log_group.facebook_logs.arn}:*"
+        Resource = "arn:aws:logs:*:*:log-group:/ecs/facebook-service:*"
       }
     ]
   })
 }
 
-resource "aws_iam_policy_attachment" "ecs_execution_role_policy" {
-  name       = "ecs-execution-role-policy"
-  roles      = [aws_iam_role.ecs_execution_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+# Attach CloudWatch Logs Policy to ECS Execution Role
+resource "aws_iam_role_policy_attachment" "task_role_logs" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = aws_iam_policy.cloudwatch_logs.arn
 }
 
+# ECS Task Definition
 resource "aws_ecs_task_definition" "facebook" {
   family                   = "facebook-task"
   network_mode             = "awsvpc"
@@ -62,7 +81,6 @@ resource "aws_ecs_task_definition" "facebook" {
   ])
 }
 
-
 # ECS Service
 resource "aws_ecs_service" "facebook_service" {
   name            = "facebook-service"
@@ -84,6 +102,8 @@ resource "aws_ecs_service" "facebook_service" {
 
   desired_count = 1
 }
+
+# CloudWatch Log Group
 resource "aws_cloudwatch_log_group" "facebook_logs" {
   name              = "/ecs/facebook-service"
   retention_in_days = 30 # Optional: Adjust as needed
