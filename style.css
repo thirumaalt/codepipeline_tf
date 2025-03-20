@@ -1,0 +1,89 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    width: 980px;
+    gap: 40px;
+}
+
+.left-section {
+    flex: 1;
+    margin-top: 80px;
+}
+
+.left-section h1 {
+    color: #1877f2;
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+
+.left-section p {
+    font-size: 24px;
+}
+
+.right-section {
+    background: #fff;
+    padding: 20px;
+    width: 380px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+input[type="text"], 
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+button {
+    width: 100%;
+    background-color: #1877f2;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.forgot-password {
+    display: block;
+    margin: 15px 0;
+    color: #1877f2;
+    text-decoration: none;
+}
+
+.divider {
+    border-top: 1px solid #ddd;
+    margin: 15px 0;
+}
+
+.create-account {
+    background-color: #42b72a;
+}
+
+footer {
+    margin-top: 30px;
+    font-size: 14px;
+    color: #606770;
+}
+
+footer a {
+    color: #1c1e21;
+    font-weight: bold;
+    text-decoration: none;
+}
